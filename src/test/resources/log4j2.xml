@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30">
+	<!-- Properties allow reusable elements -->
+	<Properties>
+		<Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level
+			%logger{36} - %msg%n</Property>
+		<Property name="LOG_DIR">logs</Property> <!-- Directory for log files -->
+	</Properties>
+
+	<!-- Define appenders (where the logs will go) -->
+	<Appenders>
+		<!-- Console Appender: outputs logs to the console -->
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="${LOG_PATTERN}" />
+		</Console>
+
+		<!-- File Appender: outputs logs to a file -->
+		<File name="File" fileName="${LOG_DIR}/app.log" append="true">
+			<PatternLayout pattern="${LOG_PATTERN}" />
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1" modulate="true" />
+				<SizeBasedTriggeringPolicy size="10MB" />
+			</Policies>
+		</File>
+
+		<!-- RollingFile Appender: rotates logs by time/size and keeps backups -->
+		<RollingFile name="RollingFile" fileName="${LOG_DIR}/rolling_app.log"
+			filePattern="${LOG_DIR}/app-%d{yyyy-MM-dd}-%i.log.gz" append="true">
+			<PatternLayout pattern="${LOG_PATTERN}" />
+			<Policies>
+				<!-- Rotate logs daily and when they exceed 10MB -->
+				<TimeBasedTriggeringPolicy interval="1" modulate="true" />
+				<SizeBasedTriggeringPolicy size="10MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="10" />
+		</RollingFile>
+	</Appenders>
+
+	<!-- Define loggers (what gets logged and where) -->
+	<Loggers>
+		<!-- Root logger: applies to all classes -->
+		<Root level="info">
+			<AppenderRef ref="Console" /> <!-- Logs go to Console -->
+			<AppenderRef ref="File" /> <!-- Logs go to File -->
+			<AppenderRef ref="RollingFile" /> <!-- Logs go to RollingFile -->
+		</Root>
+
+		<!-- Example of a custom logger for specific packages or classes -->
+		<Logger name="com.yourcompany" level="debug" additivity="false">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="File" />
+		</Logger>
+	</Loggers>
+</Configuration>
+	
+
+
